@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+      content="width=device-width,
+               initial-scale=1,
+               maximum-scale=1,
+               user-scalable=no">
+  <title>Incremental Card Game</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/merchant.css" />
+  <link rel="stylesheet" href="css/skills.css" />
+  <link rel="stylesheet" href="css/statistics.css" />
+  <link rel="stylesheet" href="css/harvester.css" />
+  <link rel="stylesheet" href="css/absorber.css" />
+  <link rel="stylesheet" href="css/interceptor.css" />
+  <link rel="stylesheet" href="css/time_crunch.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/settings.css" />
+  <link rel="stylesheet" href="css/battles.css" />
+</head>
+<body>
+  <div class="domain-change-banner">
+    ⚠️ This game is moving to <a href="https://www.kuzzigames.com" target="_blank">www.kuzzigames.com</a>. This version is no longer being updated and this domain will be disabled on Aug 9, 2025. Please transfer your save to the new domain!
+  </div>
+  
+  <!-- Landscape Mode Overlay -->
+  <div id="landscape-overlay" style="display: none;">
+    <div class="landscape-content">
+      <img src="assets/images/rotate_device.png" alt="Rotate Device" class="rotate-icon">
+      <h2>Please Rotate Your Device</h2>
+      <p>This game is best played in landscape mode</p>
+    </div>
+  </div>
+
+  <!-- Welcome Modal -->
+  <div id="welcome-modal" class="welcome-modal" style="display: none;">
+    <div class="welcome-content">
+      <h2>Welcome to Cosmic Collection - an Incremental Collectible Card Game!</h2>
+      <div class="welcome-tips">
+        <div class="tip-item">
+          <div class="tip-text">Poke the black hole and see what it spits out</div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-text">Swipe cards to flip them over</div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-text">Click cards to see details</div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-text">Explore the tabs on top to see your collection, skills, and more</div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-text">I'm sure you can figure the rest out. Enjoy!</div>
+        </div>
+      </div>
+      <h2>Can you collect them all?</h2>
+      <button class="welcome-close-btn">Got it!</button>
+    </div>
+  </div>
+
+  <!-- Currency Bar -->
+  <div id="currency-bar"></div>
+  <!-- Cooldown bar pinned under the currency bar -->
+  <div id="global-cooldown-bar">
+    <div id="global-cooldown-fill"></div>
+  </div>
+
+  <!-- Navigation Tabs -->
+  <nav id="tabs">
+    <button id="tab-btn-hole"    class="tab-btn active">Hole</button>
+    <button id="tab-btn-cards"   class="tab-btn">Cards</button>
+    <button id="tab-btn-skills"  class="tab-btn">Skills</button>
+    <button id="tab-btn-merchant"class="tab-btn">Merchant</button>
+    <button id="tab-btn-battles" class="tab-btn">Battles</button>
+    <button id="tab-btn-stats"   class="tab-btn">Stats</button>
+    <button id="tab-btn-settings" class="tab-btn">Settings</button>
+  </nav>
+
+  <!-- HOLE TAB -->
+  <div id="tab-content-hole" class="tab-content">
+    <div id="poke-grid">
+      <div class="poke-hole-wrapper">
+        <div id="hole-button" class="hole-button">
+          <span id="cooldown-counter"></span>
+        </div>
+        <div id="harvester-container" class="harvester-container" style="display: none;">
+          <img id="harvester-button" class="harvester-button" src="assets/images/harvester.png" alt="Harvester" onclick="handleHarvesterClick()" />
+          <div class="harvester-counter">0.00</div>
+        </div>
+        <div id="absorber-container" class="absorber-container" style="display: none;">
+          <img id="absorber-button" class="absorber-button" src="assets/images/absorber.png" alt="Absorber" onclick="handleAbsorberClick()" />
+          <div class="absorber-counter">0.00</div>
+        </div>
+        <div id="interceptor-container" class="interceptor-container" style="display: none;">
+          <img id="interceptor-button" class="interceptor-button" src="assets/images/interceptor.png" alt="Interceptor" onclick="handleInterceptorClick()" />
+          <div class="interceptor-counter">0.00</div>
+        </div>
+        <div id="time-crunch-container" class="time-crunch-container" style="display: none;">
+          <div id="time-crunch-button" class="time-crunch-button" onclick="handleTimeCrunchClick()">
+            <img
+              src="assets/images/time_crunch.png"
+              alt="Time Crunch"
+              class="time-crunch-image"
+            />
+          </div>
+        </div>
+      </div>
+    
+      <div class="poke-controls">
+        <div id="poke-filters" class="poke-filters-container"></div>
+        <div id="poke-filter-stats" class="poke-filter-stats">
+          <table>
+            <tr>
+              <td><strong>Poke Cooldown</strong></td>
+              <td id="cooldown-val"></td>
+            </tr>
+            <tr>
+              <td><strong>Undiscovered Cards</strong></td>
+              <td id="undiscovered-val"></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div id="draw-area" class="draw-area hole-draw-area"></div>
+    </div>
+  </div>
+  
+  
+
+  <div id="tab-content-cards" class="tab-content">
+    <h2>Card Collection</h2>
+    <div id="effect-filters" class="effect-filters"></div>
+    <div id="cards-filters"></div>
+    <div id="cards-list" class="draw-area"></div>
+  </div>
+
+  <div id="tab-content-skills" class="tab-content" style="display:none;">
+    <h2>Skills</h2>
+    <ul id="skills-list"></ul>
+  </div>
+
+  <div id="tab-content-merchant" class="tab-content" style="display:none;">
+    <div id="merchant-panel">
+      <img   id="merchant-image"   class="merchant-image"   alt="Merchant" />
+      <div  id="merchant-message" class="merchant-message"></div>
+      <div  id="merchant-offers"  class="merchant-offers"></div>
+      <div  id="merchant-timer"   class="merchant-timer"></div>
+    </div>
+  </div>
+
+  <div id="tab-content-battles" class="tab-content" style="display:none;">
+  </div>
+
+  <div id="tab-content-stats" class="tab-content" style="display:none;">
+  </div>
+
+  <div id="tab-content-settings" class="tab-content" style="display:none;">
+    <div class="settings-container">
+      <div class="settings-section">
+        <h2>Save & Load</h2>
+        <div class="settings-buttons">
+          <button id="saveToFileBtn" class="settings-button save-button">
+            <i class="fas fa-file-download"></i> Save to File
+          </button>
+          <button id="loadFromFileBtn" class="settings-button load-button">
+            <i class="fas fa-file-upload"></i> Load from File
+          </button>
+          <button id="saveToClipboardBtn" class="settings-button save-button">
+            <i class="fas fa-copy"></i> Save to Clipboard
+          </button>
+          <button id="loadFromClipboardBtn" class="settings-button load-button">
+            <i class="fas fa-paste"></i> Load from Clipboard
+          </button>
+        </div>
+      </div>
+      <div class="settings-section">
+        <h2>Preferences</h2>
+        <div class="settings-buttons">
+          <button id="darkThemeToggle" class="settings-button theme-button">
+            <i class="fas fa-moon"></i> Dark Theme
+          </button>
+          <div class="card-size-control">
+            <label for="cardSizeSlider">Card Size: <span id="cardSizeValue">100%</span></label>
+            <input type="range" id="cardSizeSlider" min="25" max="150" value="100" step="5">
+          </div>
+          <button id="showTierUpsToggle" class="settings-button toggle-button">
+            <i class="fas fa-check"></i> Show Tier Ups in Collection
+          </button>
+          <button id="autoAbsorberToggle" class="settings-button toggle-button" style="display: none;">
+            <i class="fas fa-times"></i> Auto-Use Max Absorber
+          </button>
+        </div>
+      </div>
+      <div class="settings-section">
+        <h2>Danger Zone</h2>
+        <div class="settings-buttons">
+          <button id="resetGameButton" class="settings-button danger-button">
+            <i class="fas fa-trash"></i> Reset Game
+          </button>
+          <button id="getUnstuckBtn" class="settings-button warning-button">
+            <i class="fas fa-life-ring"></i> Get Unstuck
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reset Game Warning Modal -->
+  <div id="resetWarningModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <h2>Reset Game</h2>
+      <p>Are you sure you want to reset your game? This will delete all your progress and cannot be undone.</p>
+      <div class="modal-buttons">
+        <button id="confirmResetButton" class="settings-button danger-button">Reset</button>
+        <button id="cancelResetButton" class="settings-button safe-button">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Structure -->
+  <div class="modal-overlay" id="card-modal" style="display: none;">
+    <div class="modal-content">
+      <!-- Left Column -->
+      <div class="modal-left">
+        <div class="modal-frame">
+          <img class="modal-frame-img" src="" alt="Card Frame">
+          <img class="modal-image" src="" alt="Card Image">
+          <img class="modal-tier-icon" src="" alt="Tier Icon">
+          <div class="modal-name"></div>
+          <div class="modal-desc"></div>
+        </div>
+      </div>
+      
+      <!-- Right Column -->
+      <div class="modal-right">
+        <!-- Content will be added dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Libs -->
+  <script src="https://cdn.jsdelivr.net/npm/decimal.js@10.3.1/decimal.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+
+  <!-- Core Data -->
+  <script src="js/image_cache.js"></script>
+  <script src="js/cards.js"></script>
+  <script src="js/skills_helpers.js"></script>
+  <script src="js/skills.js"></script>
+
+  <!-- Split-out Logic -->
+  <script src="js/resources.js"></script>
+  <script src="js/effects.js"></script>
+  <script src="js/statistics.js"></script>
+  <script src="js/merchant_helpers.js"></script>
+  <script src="js/merchant.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/harvester.js"></script>
+  <script src="js/absorber.js"></script>
+  <script src="js/interceptor.js"></script>
+  <script src="js/time_crunch.js"></script>
+  <script src="js/battles.js"></script>
+
+  <!-- Main Behavior -->
+  <script src="js/main.js"></script>
+</body>
+</html>

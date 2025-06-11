@@ -5,11 +5,15 @@
   <!-- Mobile-friendly viewport -->
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>Degens Adventure</title>
+  <link rel="icon" type="image/x-icon" href="images/favicon.ico"> <!-- For older browsers -->
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon_32.png"> <!-- For modern browsers -->
+  <link rel="icon" type="image/png" sizes="64x64" href="images/favicon_64.png">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <script src="chs.js"></script>
-  <script src="core.js"></script>
+  <div class="domain-change-banner">
+    ⚠️ This game is moving to <a href="https://www.kuzzigames.com" target="_blank">www.kuzzigames.com</a>. This version is no longer being updated and this domain will be disabled on Aug 9, 2025. Please transfer your save to the new domain!
+  </div>
   <div class="container">
     <!-- Top status section with settings image, bars, and upgrades -->
     <div id="topStatus">
@@ -23,7 +27,7 @@
         <!-- Energy Bar -->
         <div class="status-bar" id="energyBarContainer">
           <span class="status-label">Energy</span>
-          <div class="status-bar-bg">
+          <div class="status-bar-bg" id="energyBar">
              <div class="status-bar-fill" id="energyBarFill"></div>
              <span class="status-bar-value" id="energyText">100</span>
           </div>
@@ -32,7 +36,7 @@
         <!-- Copium Bar (initially hidden) -->
         <div class="status-bar" id="copiumBarContainer" style="display:none;">
           <span class="status-label">Copium</span>
-          <div class="status-bar-bg">
+          <div class="status-bar-bg" id="copiumBar">
              <div class="status-bar-fill" id="copiumBarFill"></div>
              <span class="status-bar-value" id="copiumText">0</span>
           </div>
@@ -41,7 +45,7 @@
         <!-- Delusion Bar (initially hidden) -->
         <div class="status-bar" id="delusionBarContainer" style="display:none;">
           <span class="status-label">Delusion</span>
-          <div class="status-bar-bg">
+          <div class="status-bar-bg" id="delusionBar">
              <div class="status-bar-fill" id="delusionBarFill"></div>
              <span class="status-bar-value" id="delusionText">0</span>
           </div>
@@ -71,8 +75,6 @@
       <!-- Skills display (populated by game.js) -->
       <div id="skills"></div>
     </header>
-
-    <div id="versionBanner"></div>
 
     <!-- Main layout split into two columns -->
     <main class="game-layout">
@@ -116,27 +118,11 @@
 
 
   <!-- Scripts -->
+  <script src="tutorial.js"></script>
   <script src="formatting.js"></script>
   <script src="sounds.js"></script>
   <script src="zones.js"></script>
   <script src="resources.js"></script>
   <script src="game.js"></script>
-<!--客服 开始-->
-<script src="//g8hh.com.cn/static/js/jquery.min.js"></script>
-<link rel="stylesheet" href="//g8hh.com.cn/static/css/kf.css" type="text/css" media="screen" charset="utf-8">
-<script src="//g8hh.com.cn/static/js/kf.js"></script>
-<!-- 客服 结束 -->
-<!--站长统计-->
-<div style="display: none">
-    <script>
-    var _hmt = _hmt || [];
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = "https://hm.baidu.com/hm.js?dbb7ff142f4d4b68546c93b9cd6e9328";
-      var s = document.getElementsByTagName("script")[0]; 
-      s.parentNode.insertBefore(hm, s);
-    })();
-    </script>
-        </div>
 </body>
 </html>

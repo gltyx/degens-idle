@@ -1,0 +1,318 @@
+/* Top Stats: two separate rows, each a 2-column grid */
+.stats-top-container {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 3dvh, 16px);
+  width: 100%;
+}
+.stats-top-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: clamp(8px, 3dvh, 16px);
+  width: 100%;
+}
+
+/* Statistics Sections */
+.stats-section {
+  margin-bottom: clamp(12px, 4dvh, 24px);
+  padding: clamp(8px, 3dvh, 16px);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px var(--card-shadow);
+  background: var(--stats-bg);
+  font-size: clamp(0.8em, 2.4dvh, 1.1em);
+  width: 100%;
+  min-width: 0;
+  overflow-x: visible;
+}
+
+.stats-section h3 {
+  margin-top: 0;
+  font-family: var(--card-font);
+  color: var(--font-color);
+  font-size: clamp(1em, 2.8dvh, 1.3em);
+}
+
+.stats-header {
+  border-bottom: 2px solid var(--dark);
+  padding-bottom: 4px;
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  font-size: clamp(1.6em, 5dvh, 2.5em);
+  margin: clamp(4px, 2dvh, 8px) 0;
+}
+
+.stat-list {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0;
+}
+
+.stat-list li {
+  margin: 4px 0;
+}
+
+/* Tables */
+.stats-section table,
+.currency-table,
+.effects-table,
+.realm-table {
+  width: 100%;
+  margin: 0 auto 1rem;
+  border-collapse: collapse;
+  text-align: center;
+  background: var(--table-bg);
+  border: 1px solid var(--table-border);
+}
+
+.stats-section th,
+.stats-section td {
+  padding: 6px 12px;
+  border: 1px solid var(--table-cell-border);
+  font-family: var(--ui-font);
+  font-size: clamp(0.6em, 1.5vw, 1.1em);
+  color: var(--table-cell-color);
+  background: var(--table-cell-bg);
+}
+
+/* Rarity Table */
+.rarity-table th {
+  background: var(--table-header-bg);
+  color: var(--table-header-color);
+  font-weight: bold;
+}
+
+/* Currency & Effects Tables */
+.currency-table th,
+.effects-table th {
+  background: var(--table-header-bg);
+  color: var(--table-header-color);
+  font-weight: bold;
+}
+
+.currency-table td img.icon {
+  width: clamp(16px, 3dvh, 20px);
+  height: clamp(16px, 3dvh, 20px);
+  margin-right: 4px;
+}
+
+/* Realm Container: 2 columns */
+.realm-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(8px, 3dvh, 16px);
+  width: 100%;
+}
+
+/* Merchants Section */
+.stats-section.realm-section.merchants-section {
+  width: 100%;
+}
+
+.merchants-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(60px, 80px));
+  grid-auto-rows: minmax(60px, 80px);
+  gap: clamp(4px, 2dvh, 8px);
+}
+
+.merchant-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 2px solid transparent;
+}
+
+.merchant-thumb.selected-thumb {
+  border-color: var(--accent);
+}
+
+.merchant-thumb.locked-thumb {
+  filter: grayscale(100%);
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* Realm Sections */
+.realm-section {
+  background: var(--stats-bg);
+  padding: 12px;
+  border-radius: 6px;
+}
+
+.realm-section h3 {
+  padding-bottom: 4px;
+  border-bottom: 2px solid var(--dark);
+}
+
+.realm-stats-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.realm-stats-grid > div {
+  flex: 1 1 120px;
+}
+
+/* Add specific styling for realm tables within realm sections */
+.realm-section .realm-table {
+  flex: 1 1 300px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Column width distribution for different tables */
+.currency-table th:nth-child(1),
+.currency-table td:nth-child(1) { width: 25%; } /* Currency name */
+.currency-table th:nth-child(2),
+.currency-table td:nth-child(2) { width: 15%; } /* Base */
+.currency-table th:nth-child(3),
+.currency-table td:nth-child(3) { width: 15%; } /* Mult */
+.currency-table th:nth-child(4),
+.currency-table td:nth-child(4) { width: 15%; } /* From Cards */
+.currency-table th:nth-child(5),
+.currency-table td:nth-child(5) { width: 15%; } /* From Generators */
+.currency-table th:nth-child(6),
+.currency-table td:nth-child(6) { width: 15%; } /* Gen Mult */
+
+.realm-table th:nth-child(1),
+.realm-table td:nth-child(1) { width: 20%; } /* Rarity */
+.realm-table th:nth-child(2),
+.realm-table td:nth-child(2) { width: 20%; } /* Discovered */
+.realm-table th:nth-child(3),
+.realm-table td:nth-child(3) { width: 20%; } /* Owned */
+.realm-table th:nth-child(4),
+.realm-table td:nth-child(4) { width: 20%; } /* Odds */
+.realm-table th:nth-child(5),
+.realm-table td:nth-child(5) { width: 20%; } /* Probability */
+
+.realm-table th,
+.realm-table td {
+  font-size: clamp(0.9em, 1vw, 1.2em);
+}
+
+@media (max-width: 900px) {
+  .stats-top-row {
+    grid-template-columns: 1fr;
+  }
+  .realm-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Tier Progress Table */
+.tier-progress-section {
+  margin-top: clamp(16px, 5dvh, 32px);
+  padding: clamp(8px, 3dvh, 16px);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px var(--card-shadow);
+  background: var(--stats-bg);
+  width: 100%;
+}
+
+.tier-progress-section h3 {
+  margin-top: 0;
+  font-family: var(--card-font);
+  color: var(--font-color);
+  font-size: clamp(1em, 2.8dvh, 1.3em);
+  border-bottom: 2px solid var(--dark);
+  padding-bottom: 4px;
+  margin-bottom: 8px;
+}
+
+.tier-progress-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 auto;
+  font-size: clamp(0.8em, 2.4dvh, 1.1em);
+  background: var(--table-bg);
+  border: 1px solid var(--table-border);
+}
+
+.tier-progress-table th,
+.tier-progress-table td {
+  padding: 4px 6px;
+  border: 1px solid var(--table-cell-border);
+  text-align: center;
+  position: relative;
+  color: var(--table-cell-color);
+  background: var(--table-cell-bg);
+}
+
+.tier-progress-table th {
+  background: var(--table-header-bg);
+  color: var(--table-header-color);
+  font-weight: bold;
+}
+
+.tier-progress-table td.rarity-cell {
+  font-weight: bold;
+  text-align: left;
+  padding-left: 12px;
+}
+
+.tier-progress-table td.legend-cell {
+  font-size: 0.8em;
+  color: var(--dark);
+  text-align: left;
+  padding-left: 8px;
+  white-space: nowrap;
+}
+
+.tier-progress-table td.tier-cell {
+  position: relative;
+  min-width: 20px;
+}
+
+.tier-threshold {
+  font-family: monospace;
+  font-size: 0.9em;
+  color: var(--dark);
+  display: block;
+  margin-bottom: 2px;
+}
+
+.tier-count {
+  font-weight: bold;
+  font-size: 1.1em;
+  color: var(--accent);
+  display: block;
+}
+
+.tier-cell.empty {
+  background: var(--light);
+}
+
+.tier-cell .zero-count {
+  color: #ff4444;
+}
+
+.tier-cell .unowned-count {
+  color: #ff4444;
+}
+
+.tier-cell .behind-count {
+  color: #ffa500;
+}
+
+@media (max-width: 1200px) {
+  .tier-progress-table {
+    font-size: clamp(0.7em, 2dvh, 1em);
+  }
+  
+  .tier-progress-table th,
+  .tier-progress-table td {
+    padding: 3px 4px;
+  }
+  
+  .tier-threshold {
+    font-size: 0.8em;
+  }
+  
+  .tier-count {
+    font-size: 1em;
+  }
+} 

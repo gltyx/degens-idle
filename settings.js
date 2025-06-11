@@ -326,7 +326,15 @@ document.getElementById('pasteSaveButton').addEventListener('click', function() 
 document.getElementById('howToPlayButton').addEventListener('click', function() {
     closeSettings();
     unlockAchievement('How to Play');
-    showMessageModal('How to Play', '', false, false, 'imgs/modal_imgs/howtoplay.png');
+    showMessageModal('How to Play', '', false, false, 'imgs/modal_imgs/howtoplay.jpg');
+});
+
+
+// Add event listener for Import Save button
+document.getElementById('trailerButton').addEventListener('click', function() {
+    closeSettings();
+    unlockAchievement('Watch Trailer');
+    window.open('https://www.youtube.com/watch?v=g8tVXoYSIy4', '_blank');
 });
 
 document.getElementById('wikiButton').addEventListener('click', function() {
@@ -356,6 +364,12 @@ document.getElementById('donateLargeButton').addEventListener('click', function(
 document.getElementById('feedbackButton').addEventListener('click', function() {
     unlockAchievement('Make Kuzzi Love You');
     window.open('https://docs.google.com/forms/d/e/1FAIpQLSfaQdxaBFCdT789rVTSvFuScEEzlu4rDabjFUX0zkCKinyvKA/viewform?usp=sf_link', '_blank');
+});
+
+// Add event listener for Discord button
+document.getElementById('degensAdventureButton').addEventListener('click', function() {
+    unlockAchievement('Degens Adventure');
+    window.open('https://www.degensidle.com/adventure/', '_blank');
 });
 
 function toggleAllBuyMarkers(targetState) {
@@ -407,14 +421,14 @@ document.getElementById('automationButton').addEventListener('click', function()
         const enableQuickModeAscendSwitch = document.getElementById('enableQuickModeAscend');
         enableQuickModeAscendSwitch.checked = enableQuickModeAscend;
         const quickModeAscendContainer = document.getElementById('quickModeAscendContainer');
-        if (upgrades.some(upgrade => upgrade.isGodMode)) {
+        if (upgrades.some(upgrade => upgrade.isGodMode) || bigCrunchMultiplier > 1) {
             quickModeAscendContainer.style.display = 'block';
         }
 
         const enableQuickModeTranscendSwitch = document.getElementById('enableQuickModeTranscend');
         enableQuickModeTranscendSwitch.checked = enableQuickModeTranscend;
         const quickModeTranscendContainer = document.getElementById('quickModeTranscendContainer');
-        if (upgrades.some(upgrade => upgrade.isPUGodMode)) {
+        if (upgrades.some(upgrade => upgrade.isPUGodMode) || bigCrunchMultiplier > 1) {
             quickModeTranscendContainer.style.display = 'block';
         }
 

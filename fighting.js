@@ -52,7 +52,7 @@ const enemyStats = {
         absorb: 0.3
     },
     "Isshin": {
-        health: 5500,
+        health: 6000,
         minDamage: 5,
         maxDamage: 12,
         attackSpeed: 45,
@@ -868,7 +868,7 @@ function attackEnemy(resolve) {
 
         } else {
             // After 69 revives, calculate the revival chance
-            const revivalChance = 0.99 * Math.pow(0.99, deadpoolRevives - 69);
+            const revivalChance = 0.9931 * Math.pow(0.9931, deadpoolRevives - 69);
             if (Math.random() < revivalChance) {
                 unlockAchievement('WHY IS HE ALIVE?');
                 enemyHealth = enemyMaxHealth;
@@ -877,7 +877,8 @@ function attackEnemy(resolve) {
                     unlockAchievement('Rasta Deadpool');
                 }
                 logFight(`<span style='color: #AAFF00;'>${currEnemyName} dies and regenerates back to full health! 
-                    (<span style='font-weight: bold; font-size: 1.4em;'>${deadpoolRevives}</span> revives - you feel like he's killable now!)</span>`);
+                    <span style='font-weight: bold; font-size: 1.4em;'>${deadpoolRevives}</span> revives - you feel like he's killable now! (Revival Chance: ${formatNumber(revivalChance * 100)}%)</span>`);
+
 
                 // Call updateHealthBars to ensure the health bar reflects the new health
                 updateHealthBars();
@@ -895,7 +896,7 @@ function attackEnemy(resolve) {
                 }, 150); // Slightly longer delay to ensure the flash is visible
             } else {
                 logFight(`<span style='color: #39FF14;'>${currEnemyName} finally stays dead after 
-                    <span style='font-weight: bold; font-size: 1.4em;'>${deadpoolRevives}</span> revives!</span>`);
+                    <span style='font-weight: bold; font-size: 1.4em;'>${deadpoolRevives}</span> revives! (Revival Chance: ${formatNumber(revivalChance * 100)}%)</span>`);
             }
         }
     }
@@ -1054,8 +1055,8 @@ function attackEnemy(resolve) {
 
             if (!purchasedUpgradesSet.has("Mosquito")) {
                 unlockAchievement('Dirty Trick');
-                enemyStunCount += 250;
-                logFight("<span style='color: green; font-size: 1.3em';>Just as Saitama got serious, you pointed at a piñata and he couldn't resist. But when he punched it, a swarm of mosquitos burst out, fueling his mosquito hate. He spends 250 turns squashing them, leaving himself wide open to your attacks.</span>");
+                enemyStunCount += 200;
+                logFight("<span style='color: green; font-size: 1.3em';>Just as Saitama got serious, you pointed at a piñata and he couldn't resist. But when he punched it, a swarm of mosquitos burst out, fueling his mosquito hate. He spends 200 turns squashing them, leaving himself wide open to your attacks.</span>");
                 if (numBattleGimmicks.size >= 9) {
                     unlockAchievement('Bells and Whistles');
                 }
@@ -1310,8 +1311,8 @@ function attackPlayer(resolve) {
             enemyCritChance = Math.min(enemyCritChance + critIncrease, 1); // Ensure it doesn't exceed 1
             logFight(`<span style='color: #cd853f;'>Saitama cracks his knuckles! His critical chance increases by ${formatNumber(critIncrease * 100)}%.</span>`);
         } else if (rand < 50) { // 10% chance for Squats
-            enemyDefense += 9e15; // Increases defense by 9 Qa
-            logFight(`<span style='color: #b22222;'>Saitama does Squats! His defense increases by 9 quadrillion.</span>`);
+            enemyDefense += 1e16; // Increases defense by 9 Qa
+            logFight(`<span style='color: #b22222;'>Saitama does Squats! His defense increases by 10 quadrillion.</span>`);
         } else if (rand < 60) { // 10% chance for Sit Ups
             const absorbIncrease = 0.0275 * (1 - enemyAbsorb); // Diminishing absorb increase based on remaining potential
             enemyAbsorb = Math.min(enemyAbsorb + absorbIncrease, 0.9999); // Ensure it doesn't exceed 1
@@ -1409,7 +1410,7 @@ function attackPlayer(resolve) {
     }
 
     if (currEnemyName === 'Serious Saitama'){
-        enemyMaxDamage *= 1.0025;
+        enemyMaxDamage *= 1.0028;
         document.getElementById('enemyDamageStat').innerText = `${formatNumber(enemyMinDamage)} - ${formatNumber(enemyMaxDamage)}`;
         logFight(`<span style='color: #b3a125; '>Saitama gets slightly more serious!</span>`);
     }
@@ -1503,6 +1504,11 @@ document.getElementById('fightLog').addEventListener('scroll', () => {
 
         if (!fightEnded && !userScrolledRecently) {
             showPopupTooltip('Fight Log scroll temporarily paused', 'gray', 0.5);
+            numFightLogScrolls++;
+            localStorage.setItem('numFightLogScrolls', numFightLogScrolls);
+            if (numFightLogScrolls >= 50) {
+                unlockAchievement('Battle Analyst');
+            }
         }
 
         userScrolledRecently = true;

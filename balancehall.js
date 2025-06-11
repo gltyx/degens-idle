@@ -13,15 +13,15 @@ const balanceHallContainer = document.getElementById('balanceHallSkills');
 const basicResources = ['Copium', 'Delusion', 'Yacht Money', 'Troll Points'];
 
 let balanceHallSkills = new Map([
-    ["Greater Balance", { description: "Increase max balance values x100", cost: { Copium: 2.5e205 }, available: false, unlocked: false }],
+    ["Greater Balance", { description: "Increase max balance values x100", cost: { Copium: 2e205 }, available: false, unlocked: false }],
     ["Love Matters", { description: "Multiply all resources by (Love Points / 1000)", cost: { Delusion: 1e210 }, available: false, unlocked: false }],
-    ["Balance Check", { description: "Multiplier to last 4 resources based on balance of first 4 resources (checked every 30 seconds)", cost: { 'Yacht Money': 5e217 }, available: false, unlocked: false }],
+    ["Balance Check", { description: "Multiplier to last 4 resources (max 999x) based on how close together the amounts of first 4 resources are (checked every 30 seconds)", cost: { 'Yacht Money': 5e217 }, available: false, unlocked: false }],
     ["Everlasting Love", { description: "Passively generate Love Points based on largest embrace each hour (online & offline) -- can go beyond the Infinite Embrace 1M limit", cost: { 'Troll Points': 1e225 }, available: false, unlocked: false }],
     ["Quality of Life", { description: "Resource balancing first 4 resources no longer resets game AND Ascend/Transcend up to 100 upgrades at once AND Cookie Clicker Clicker is permanent AND unlock toggle for suppressing Hall of Balance skills", cost: { Hopium: 1e230 }, available: false, unlocked: false }],
-    ["Balance is Power", { description: "Multiplicative 5x to Power for each Balance Skill unlocked", cost: { Knowledge: 1e202 }, available: false, unlocked: false }],
+    ["Balance is Power", { description: "Multiplicative 5x to Power for each Balance Skill unlocked", cost: { Knowledge: 2e202 }, available: false, unlocked: false }],
     ["Temporal Dominion", { description: "Time Warp charges 5x faster AND max time increases to 24 minutes", cost: { Power: 1e90 }, available: false, unlocked: false }],
-    ["Serene Future", { description: "Multiplicative 3% to Serenity for each upgrade purchased", cost: { Serenity: 1e47 }, available: false, unlocked: false }],
-    ["Greatest Balance", { description: "Max balance values are squared", cost: { Copium: 1e242, Delusion: 1e242, 'Yacht Money': 1e242, 'Troll Points': 1e242, Hopium: 1e242, Knowledge: 1e213, Power: 1e96, Serenity: 1e52 }, available: false, unlocked: false }],
+    ["Serene Future", { description: "Multiplicative 3% to Serenity for each upgrade purchased", cost: { Serenity: 7e47 }, available: false, unlocked: false }],
+    ["Greatest Balance", { description: "Max balance values are squared", cost: { Copium: 1e244, Delusion: 1e244, 'Yacht Money': 1e244, 'Troll Points': 1e244, Hopium: 1e243, Knowledge: 1e214, Power: 1e96, Serenity: 1e52 }, available: false, unlocked: false }],
     ["Surrounded by Love", { description: "Passive Love Point Generation is 500x faster", cost: { Copium: 1e258, Delusion: 1e258, 'Yacht Money': 1e258, 'Troll Points': 1e258, Hopium: 1e257, Knowledge: 1e230, Power: 1e107, Serenity: 1.6e56 }, available: false, unlocked: false }],
     ["Singularity Wielder", { description: "In battles, set Stun and Dodge chances to log10(serenity) AND vastly increase HP scaling with Copium", cost: { Copium: 1e268, Delusion: 1e268, 'Yacht Money': 1e268, 'Troll Points': 1e268, Hopium: 2e266, Knowledge: 3e242, Power: 6e114, Serenity: 1.6e59 }, available: false, unlocked: false }],
     ["Guardian Training", { description: "Vastly Improve Meditation resource calculations (not implemented yet)", cost: { Copium: 1e300, Delusion: 1e300, 'Yacht Money': 1e300, 'Troll Points': 1e300, Hopium: 1e300, Knowledge: 1e300, Power: 1e300, Serenity: 1e300 }, available: false, unlocked: false }]
@@ -302,56 +302,54 @@ function updateSliders() {
 function updateBalanceSkillDisplay(skill, skillName) {
     const skillButton = document.querySelector(`.balance-skill-button[data-name="${skillName}"]`);
     if (!skillButton) return;
-
-    skillButton.innerHTML = ''; // Clear existing content
-
-    // Bold skill name
-    const skillNameElement = document.createElement('strong');
-    skillNameElement.textContent = skillName;
-    skillButton.appendChild(skillNameElement);
-
-    // Disable skills until they are available
-    skillButton.disabled = !skill.available;
-    skillButton.classList.toggle('disabled-skill', !skill.available); // Apply disabled style when not available
-
-    // Show cost and description only when skill is available and not unlocked
+  
+    skillButton.innerHTML = '';              // clear existing
+    skillButton.disabled = !skill.available; // toggle disabled look
+    skillButton.classList.toggle('disabled-skill', !skill.available);
+  
+    // Skill title
+    const title = document.createElement('strong');
+    title.textContent = skillName;
+    skillButton.appendChild(title);
+  
+    // Cost (only if available & not yet unlocked)
     if (skill.available && !skill.unlocked) {
-        const costContainer = document.createElement('div');
-        costContainer.classList.add('skill-cost-container');
-
-        if (Array.from(balanceHallSkills.keys()).indexOf(skillName) < 8) {
-            Object.entries(skill.cost).forEach(([resource, amount]) => {
-                const costText = document.createElement('span');
-                costText.textContent = `${formatNumber(amount)} ${resource}`;
-                costText.classList.add('skill-cost');
-                costContainer.appendChild(costText);
-            });
-        } else {
-            Object.entries(skill.cost).forEach(([resource, amount]) => {
-                const costText = document.createElement('div');
-                costText.textContent = `${formatNumber(amount)} ${resource}`;
-                costText.classList.add('skill-cost');
-                costContainer.appendChild(costText);
-            });
+      const costContainer = document.createElement('div');
+      costContainer.classList.add('skill-cost-container');
+  
+      Object.entries(skill.cost).forEach(([resName, amount]) => {
+        const costText = document.createElement('span');
+        costText.textContent = `${formatNumber(amount)} ${resName}`;
+        costText.classList.add('skill-cost');
+  
+        // mark insufficient ones
+        const playerAmt = balanceHallMultipliers.get(resName)?.resource ?? 0;
+        if (playerAmt < amount) {
+          costText.classList.add('insufficient');
         }
-        skillButton.appendChild(costContainer);
+  
+        costContainer.appendChild(costText);
+      });
+  
+      skillButton.appendChild(costContainer);
     }
-
-    // Show description only if the skill is available
+  
+    // Description (if available)
     if (skill.available) {
-        const skillDescription = document.createElement('div');
-        skillDescription.classList.add('skill-description');
-        skillDescription.textContent = skill.description;
-        skillButton.appendChild(skillDescription);
+      const desc = document.createElement('div');
+      desc.classList.add('skill-description');
+      desc.textContent = skill.description;
+      skillButton.appendChild(desc);
     }
-
-    // Style for purchased skills
+  
+    // Purchased state
     if (skill.unlocked) {
-        skillButton.classList.add('purchased-skill');
-        skillButton.style.backgroundColor = '#4CAF50';
-        skillButton.innerHTML = `<strong>${skillName}</strong><div>${skill.description}</div>`;
+      skillButton.classList.add('purchased-skill');
+      skillButton.style.backgroundColor = '#4CAF50';
+      skillButton.innerHTML = `<strong>${skillName}</strong><div>${skill.description}</div>`;
     }
 }
+  
 
 
 function anySkillPurchased() {
@@ -541,24 +539,23 @@ function balanceCheck() {
     
     // Scaling function for balanceCheckMultiplier based on diffRatio
 
-    if(suppressBalanceSkills) {
+    if (suppressBalanceSkills) {
         balanceCheckMultiplier = 1;
-    } else if (diffRatio < 2) {
-        balanceCheckMultiplier = 1000;
-    } else if (diffRatio < 5) {
-        // Interpolate between 1000 (2x) and 500 (5x)
-        balanceCheckMultiplier = 1000 - ((diffRatio - 2) / (5 - 2)) * (1000 - 500);
+    } else if (diffRatio < 2.5) {
+        balanceCheckMultiplier = 999;
     } else if (diffRatio < 10) {
-        // Interpolate between 500 (5x) and 100 (10x)
-        balanceCheckMultiplier = 500 - ((diffRatio - 5) / (10 - 5)) * (500 - 100);
+        // Interpolate between 999 (2.5x) and 500 (10x)
+        balanceCheckMultiplier = 999 - ((diffRatio - 2.5) / (10 - 2.5)) * (999 - 500);
     } else if (diffRatio < 100) {
-        // Interpolate between 100 (10x) and 10 (100x)
-        balanceCheckMultiplier = 100 - ((diffRatio - 10) / (100 - 10)) * (100 - 10);
+        // Interpolate between 500 (10x) and 100 (100x)
+        balanceCheckMultiplier = 500 - ((diffRatio - 10) / (100 - 10)) * (500 - 100);
     } else if (diffRatio < 1000) {
-        // Interpolate between 10 (100x) and 1 (1000x)
-        balanceCheckMultiplier = 10 - ((diffRatio - 100) / (1000 - 100)) * (10 - 1);
+        // Interpolate between 100 (100x) and 10 (1000x)
+        balanceCheckMultiplier = 100 - ((diffRatio - 100) / (1000 - 100)) * (100 - 10);
+    } else if (diffRatio < 10000) {
+        // Interpolate between 10 (1000x) and 1 (10000x)
+        balanceCheckMultiplier = 10 - ((diffRatio - 1000) / (10000 - 1000)) * (10 - 1);
     } else {
-        // If diffRatio is >= 1000, set balanceCheckMultiplier to 1
         balanceCheckMultiplier = 1;
     }
 

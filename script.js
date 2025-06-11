@@ -77,6 +77,7 @@ let largestEmbrace = 0;
 
 let altruisticEmbraceSkill = false;
 let masterOfBargainsSkill = false;
+let grandMasterOfBargainsSkill = false;
 let stoicEmbraceSkill = false;
 
 let currentNumberFormat = 'Mixed';
@@ -208,6 +209,10 @@ let quantumBastionSkill = false;
 let enemiesFoughtManually = new Set();
 let numBattleGimmicks = new Set();
 
+let cookieClicks = 0;
+let numTotalTrades = 0;
+let numFightLogScrolls = 0;
+
 let nebulaOverdriveSkill = false;
 let stellarHarvestSkill = false;
 let celestialCollectorSkill = false;
@@ -229,7 +234,7 @@ let defaultBuyMarkerState = false;
 let crunchTimer = 9999;
 let embraceTimer = 9999;
 
-let numLoveHallFreeRespecs; // Global variable for free respecs
+let numLoveHallFreeRespecs = 1; // Global variable for free respecs
 
 const warpButton = document.getElementById('warpTimeButton');
 let accumulatedWarpTime = 0;
@@ -388,8 +393,6 @@ function updateEffectiveMultipliers() {
     }
 }
 
-let cookieClicks = 0;
-
 // Function to handle cookie click
 function cookieCollectAllResources(isManualClick=true) {
     if (cookieBoost){
@@ -411,8 +414,10 @@ function cookieCollectAllResources(isManualClick=true) {
         trollPoints += cookieClickMultiplier * totalMultiplier;
     }
     cookieClicks++;
-    if(cookieClicks >= 500 && cookieClicks <= 505){
+    if(cookieClicks >= 500 && cookieClicks <= 550){
         unlockAchievement('Fatigued Finger');
+    } else if (cookieClicks >= 1000000 && cookieClicks <= 1001000){
+        unlockAchievement('Child Labor');
     }
     if (!achievementsMap.get('Warped Cookie').isUnlocked && isManualClick){
         warpedCookieSequence += 'C';
@@ -557,6 +562,9 @@ function loadGameState() {
 
     forgetfulnessCounter = parseFloat(localStorage.getItem('forgetfulnessCounter')) || 0;
 
+    //load cooldowns, miniGameIntervalIds, and miniGameTimeoutIds
+    // cooldowns = JSON.parse(localStorage.getItem('cooldowns')) || { speed: false, memory: false, math: false, luck: false };
+
     numMathPortals = parseFloat(localStorage.getItem('numMathPortals')) || 0;
     numSpeedTaps = parseFloat(localStorage.getItem('numSpeedTaps')) || 0;
     numCookedRabbits = parseFloat(localStorage.getItem('numCookedRabbits')) || 0;
@@ -574,8 +582,13 @@ function loadGameState() {
     numMathFailures = parseFloat(localStorage.getItem('numMathFailures')) || 0;
     numMathWins = parseFloat(localStorage.getItem('numMathWins')) || 0;
     numConsecutiveMathFailures = parseFloat(localStorage.getItem('numConsecutiveMathFailures')) || 0;
+    numMiniGameSkips = parseFloat(localStorage.getItem('numMiniGameSkips')) || 0;
 
-    numLoveHallFreeRespecs = localStorage.getItem('numLoveHallFreeRespecs') !== null ? parseFloat(localStorage.getItem('numLoveHallFreeRespecs')) : 1;
+    cookieClicks = parseFloat(localStorage.getItem('cookieClicks')) || 0;
+    numTotalTrades = parseFloat(localStorage.getItem('numTotalTrades')) || 0;
+    numFightLogScrolls = parseFloat(localStorage.getItem('numFightLogScrolls')) || 0;
+
+    numLoveHallFreeRespecs = (s => Number.isNaN(s = s !== null ? parseFloat(s) : NaN) ? 1 : s)(localStorage.getItem('numLoveHallFreeRespecs'));
 
     consecutiveClicks = parseInt(localStorage.getItem('consecutiveClicks')) || 0;
     lastClickedBoxIndex = parseInt(localStorage.getItem('lastClickedBoxIndex')) || 0;
@@ -859,6 +872,8 @@ function saveGameState() {
     localStorage.setItem('timeWarpButtonVisible', warpButton.style.display === 'block');
     localStorage.setItem('cookieClickMultiplier', cookieClickMultiplier);
 
+    localStorage.setItem('cookieClicks', cookieClicks);
+
     localStorage.setItem('transcendenceUnlocked', transcendenceUnlocked);
 
     localStorage.setItem('autoPrestigeThreshold', autoPrestigeThreshold);
@@ -887,8 +902,10 @@ function saveGameState() {
     localStorage.setItem('warpTimeRemaining', warpTimeRemaining); // Save remaining warp time
 
     localStorage.setItem('messageShownUpgrades', JSON.stringify(Array.from(messageShownUpgrades)));
- 
 
+    //save cooldowns, miniGameIntervalIds, and miniGameTimeoutIds
+    // localStorage.setItem('cooldowns', JSON.stringify(cooldowns));
+ 
     // Save unlocked library skills
     if (Array.isArray(librarySkills)) {
         const unlockedLibrarySkills = librarySkills.filter(skill => skill.unlocked);
@@ -1061,6 +1078,7 @@ function generateResources() {
     if (accumulatedWarpTime < warpTimeMax) accumulatedWarpTime += (balanceHallSkills.get("Temporal Dominion").unlocked ? 2.5 : 0.5);
 
     updateDisplay();
+    updateWarpTime();
 }
 
 async function restartPrestige(){
@@ -1100,9 +1118,9 @@ function resetButtonAndProgress(gameType) {
 
 // Helper function to clear all intervals
 function clearAllIntervals() {
-    Object.keys(miniGameIntervals).forEach(gameType => {
-        clearInterval(miniGameIntervals[gameType]);
-        delete miniGameIntervals[gameType];
+    Object.keys(miniGameIntervalIds).forEach(gameType => {
+        clearInterval(miniGameIntervalIds[gameType]);
+        delete miniGameIntervalIds[gameType];
     });
 }
 
@@ -1164,6 +1182,7 @@ async function restartGame(isPrestige = false, forceRestart = false, isInfiniteE
         // Reset ascends and multipliers if it's a full restart or Infinite Embrace
         if (!isPrestige || isInfiniteEmbrace) {
 
+            // Full Restart
             if (!isInfiniteEmbrace) {
 
                 lovePoints = 0;
@@ -1206,6 +1225,7 @@ async function restartGame(isPrestige = false, forceRestart = false, isInfiniteE
 
                 altruisticEmbraceSkill = false;
                 masterOfBargainsSkill = false;
+                grandMasterOfBargainsSkill = false;
                 stoicEmbraceSkill = false;
                 
                 serenityFlowSkill = false;
@@ -1337,6 +1357,10 @@ async function restartGame(isPrestige = false, forceRestart = false, isInfiniteE
                 numMathFailures = 0;
                 numMathWins = 0;
                 numConsecutiveMathFailures = 0;
+                numMiniGameSkips = 0;
+                cookieClicks = 0;
+                numTotalTrades = 0;
+                numFightLogScrolls = 0;
 
                 suppressBalanceSkills = false;
                 localStorage.clear();
@@ -1512,7 +1536,7 @@ async function restartGame(isPrestige = false, forceRestart = false, isInfiniteE
         updateMultipliersDisplay();
 
         // Start unlock timeouts for mini-games
-        unlockMiniGames();
+        //unlockMiniGames();
 
         // Save game state
         saveGameState();
@@ -1583,7 +1607,9 @@ function updateTradeRatio() {
         tradeRatioDisplay.textContent = 'Only Copium can convert to Hopium';
     } else {
         if (improvedTradeRatio){
-            if (masterOfBargainsSkill){
+            if (grandMasterOfBargainsSkill){
+                tradeRatioDisplay.textContent = 'Trade ratio is 2:1';
+            } else if (masterOfBargainsSkill){
                 tradeRatioDisplay.textContent = 'Trade ratio is 3:1';
             } else {
                 tradeRatioDisplay.textContent = 'Trade ratio is 5:1';
@@ -1739,7 +1765,10 @@ function tradeResources(tradeAmountInput = null) {
         }
         resourceAmount[fromResource] -= tradeAmount;
         if (improvedTradeRatio) {
-            if (masterOfBargainsSkill){
+            if (grandMasterOfBargainsSkill){
+                resourceAmount[toResource] += tradeAmount / 2;
+                showStatusMessage(tradeButton, `Traded ${formatNumber(tradeAmount)} ${fromResource} for ${formatNumber(tradeAmount / 2)} ${toResource}.`, true);
+            } else if (masterOfBargainsSkill){
                 resourceAmount[toResource] += tradeAmount / 3;
                 showStatusMessage(tradeButton, `Traded ${formatNumber(tradeAmount)} ${fromResource} for ${formatNumber(tradeAmount / 3)} ${toResource}.`, true);
             } else {
@@ -1760,6 +1789,12 @@ function tradeResources(tradeAmountInput = null) {
     hopium = resourceAmount.hopium;
 
     unlockAchievement('Trade Resources');
+
+    numTotalTrades++;
+    localStorage.setItem('numTotalTrades', numTotalTrades);
+    if (numTotalTrades >= 1000) {
+        unlockAchievement('Daytrader');
+    }
 
     // Update the display to reflect the new resource values
     updateDisplay();
@@ -1914,12 +1949,11 @@ function updateDisplay() {
     updateBigCrunchButton();
     updateInfiniteEmbraceButton();
     updateUpgradeButtons();
-    updateWarpTime();
 }
 
 function updateMultipliersDisplay() {
 
-    earlyAccelerantMult = earlyAccelerantSkill ? 1 + (13 * Math.pow(0.975, purchasedUpgrades.length)) : 1;
+    earlyAccelerantMult = earlyAccelerantSkill ? 1 + (9 * Math.pow(0.98, purchasedUpgrades.length)) : 1;
 
     totalMultiplier = epsMultiplier * godModeMultiplier * puGodMultiplier * bigCrunchMultiplier * achievementMultiplier * devMultiplier * stellarHarvestMult * stellarMeditationMult * cosmicGamekeeperMultiplier * earlyAccelerantMult
 
@@ -2309,6 +2343,10 @@ async function transcend(skipConfirms = false) {
                     unlockAchievement('Laerdal Tunnel');
                     suppressAscendPopup = true;
                 }
+                if ((gmLevelsGained == 9 || gmLevelsGained == 10) && selectedUpgrades.length == 57){
+                    unlockAchievement('Gotthard Base Tunnel');
+                    suppressAscendPopup = true;
+                }
                 godModeLevel = upgrades.filter(upgrade => upgrade.isGodMode).length;
                 godModeMultiplier = calculateGodModeMultiplier(godModeLevel);
             }
@@ -2364,6 +2402,9 @@ async function bigCrunch(skipConfirms = false) {
         }
 
         if (confirmed && canBigCrunch()) {
+
+            // Save game state to prevent data loss on rare mobile crashes        
+            saveGameState();
 
             if(isAutoSaveEnabled && loveHallSkills.filter(skill => skill.unlocked).length == 0){
                 exportSave();
@@ -2556,6 +2597,9 @@ async function infiniteEmbrace(skipConfirms = false, lovePointsOverwrite = false
         }
 
         if (confirmed) {
+
+            // Save game state to prevent data loss on rare mobile crashes        
+            saveGameState();
 
             if(isAutoSaveEnabled && Array.from(balanceHallSkills.values()).filter(skill => skill.unlocked).length < 8){
                 exportSave();
@@ -2805,7 +2849,7 @@ function updateBigCrunchButton() {
 
             // Check if auto-crunch should be triggered
             if (autoBigCrunchThreshold !== null && autoBigCrunchThreshold >= 1 && (newMultiplier / bigCrunchMultiplier) > autoBigCrunchThreshold && !isEventInProgress()) {
-                showPopupTooltip(`Auto-Crunched for x${formatNumber(newMultiplier / bigCrunchMultiplier)}`, color='#FF4433');
+                showPopupTooltip(`Auto-Crunched for x${formatNumber(newMultiplier / bigCrunchMultiplier)}`, color='#FF4433', durationSeconds=3);
                 bigCrunch(true); // Trigger auto-crunch
             }
         }
@@ -3171,7 +3215,7 @@ async function buyUpgrade(encodedUpgradeName, callUpdatesAfterBuying = true, ski
         // Increase the per second earnings for each resource, apply God Mode multiplier if applicable
         const multiplier = (upgrade.isGodMode && upgrade.isPUGodMode) ? 100 :
             (upgrade.isGodMode || upgrade.isPUGodMode) ? 10 : 1;
-        const battleMultiplier = ((upgrade.isFight && rewardingVictoriesSkill) || (upgrade.isMeditation && rewardingMeditationsSkill)) ? 1.4 : 1;
+        const battleMultiplier = ((upgrade.isFight && rewardingVictoriesSkill) || (upgrade.isMeditation && rewardingMeditationsSkill)) ? 1.5 : 1;
 
         knowledgePerSecond += (earnings.knowledgePerSecond || 0) * multiplier * battleMultiplier;
         serenityPerSecond += (earnings.serenityPerSecond || 0) * multiplier * battleMultiplier;
@@ -3371,15 +3415,44 @@ async function buyUpgrade(encodedUpgradeName, callUpdatesAfterBuying = true, ski
             ) {
                 unlockAchievement('Number One');
             }
+        } else if (
+            name.length === 1 &&
+            !achievementsMap.get('Spell It Out').isUnlocked &&
+            // scan every possible 3-letter window in availableUpgrades
+            Array.from({ length: availableUpgrades.length - 2 }, (_, i) => i)
+                 .some(startIndex =>
+                     ['A', 'C', 'E'].every((letter, idx) =>
+                         availableUpgrades[startIndex + idx] &&
+                         availableUpgrades[startIndex + idx].name === letter
+                     )
+                 )
+            ) {
+            unlockAchievement('Spell It Out');
         } else if (name.length == 1 && !achievementsMap.get('Honor').isUnlocked && [0, 1, 2, 3].some(startIndex =>
             ['G', 'L', 'O', 'R', 'Y'].every((letter, index) =>
                 availableUpgrades[startIndex + index] && availableUpgrades[startIndex + index].name == letter))) {
                 unlockAchievement('Honor');
-        } else if (name == 'S' && !achievementsMap.get('STARBOUND').isUnlocked &&
-            ['D', 'N', 'U', 'O', 'B', 'R', 'A', 'T', 'S'].every((letter, index) =>
-                purchasedUpgrades[purchasedUpgrades.length - 9 + index] &&
-                purchasedUpgrades[purchasedUpgrades.length - 9 + index].name == letter)) {
-            unlockAchievement('STARBOUND');
+        } else if (
+            // only fire on purchasing S or D
+            (name === 'S' || name === 'D') &&
+            !achievementsMap.get('STARBOUND').isUnlocked
+          ) {
+            // grab the last 9 upgrade names
+            const lastNine = purchasedUpgrades
+              .slice(-9)
+              .map(u => u.name);
+          
+            // define forward and backward spells
+            const forward  = ['S','T','A','R','B','O','U','N','D'];
+            const backward = [...forward].reverse();
+          
+            // helper to test a pattern
+            const matches = pattern =>
+              pattern.every((ch, i) => lastNine[i] === ch);
+          
+            if (matches(forward) || matches(backward)) {
+              unlockAchievement('STARBOUND');
+            }
         }
         
 
@@ -3538,7 +3611,7 @@ function formatEarnings(earnings, isGodMode = false, isPUGodMode = false, isFigh
 
             // Apply additional multipliers for Fight and Meditation skills
             if ((rewardingVictoriesSkill && isFight) || (rewardingMeditationsSkill && isMeditation)) {
-                adjustedValue *= 1.4;
+                adjustedValue *= 1.5;
             }
 
             result += `<p style="font-size: 14px;">${displayName}: ${formatNumber(adjustedValue)}</p>`;
@@ -3670,7 +3743,7 @@ function addPurchasedUpgrade(img, name, earnings, isGodMode = false, isPUGodMode
                 if (name == `What is DEGENS?`) {
                     let admireTimeoutId = setTimeout(() => {
                         unlockAchievement('Admire The Acronym');
-                    }, 15000);
+                    }, 10000);
 
                     // Delay the event listener for a moment to avoid canceling the timeout by the same initial click
                     setTimeout(() => {
@@ -3947,68 +4020,76 @@ function isResourceAffordable(resource, cost) {
     }
 }
 
-// Function to update the appearance of upgrade buttons based on affordability
 function updateUpgradeButtons() {
     let foundAffordableUpgrade = false;
-    let topUpgrades = availableUpgrades.slice(0, 8);
-
-    topUpgrades.forEach(upgrade => {
-        const encodedName = encodeName(upgrade.name);
-        const button = document.querySelector(`button[data-upgrade-name="${encodedName}"]`);
-        if (button) {
-            // Check if the upgrade is affordable based on current resources
-            if (isAffordable(upgrade.cost)) {
-                foundAffordableUpgrade = true;
-                // Manage classes based on God Mode and PU God Mode status
-                button.classList.toggle('affordable-double-godmode', upgrade.isPUGodMode && upgrade.isGodMode);
-                button.classList.toggle('affordable-pu-godmode', upgrade.isPUGodMode && !upgrade.isGodMode);
-                button.classList.toggle('affordable-godmode', upgrade.isGodMode && !upgrade.isPUGodMode);
-                button.classList.toggle('affordable', !upgrade.isGodMode && !upgrade.isPUGodMode);
-            } else {
-                button.classList.remove('affordable', 'affordable-godmode', 'affordable-pu-godmode', 'affordable-double-godmode');
-            }
-
-            // Update the cost text for the upgrade
-            const costElement = button.nextElementSibling;
-            if (costElement) {
-                costElement.innerHTML = formatCost(upgrade.cost);
-            }
-
-            // Add icons if they are not already present
-            if ((upgrade.isFight || upgrade.name === 'The Rock') && !button.querySelector('.sword-icon')) {
-                const swordIcon = document.createElement('img');
-                swordIcon.src = './imgs/textures/sword_icon.png';
-                swordIcon.classList.add('sword-icon');
-                swordIcon.style.width = '16px';
-                swordIcon.style.marginRight = '5px';
-                button.prepend(swordIcon);
-                button.style.paddingLeft = '10px';
-            }
-
-            if (upgrade.isMeditation && !button.querySelector('.meditation-icon')) {
-                const meditationIcon = document.createElement('img');
-                meditationIcon.src = './imgs/textures/meditation_icon.png';
-                meditationIcon.classList.add('meditation-icon');
-                meditationIcon.style.width = '16px';
-                meditationIcon.style.marginRight = '5px';
-                button.prepend(meditationIcon);
-                button.style.paddingLeft = '10px';
-            }
-
-            // Attach event listeners for tooltips if not already attached
-            if (!button.hasTooltipListener) {
-                attachTooltipEvents(button, upgrade);
-                button.hasTooltipListener = true; // Custom property to track listener attachment
-            }
-        }
-    });
-
-    // Update buy buttons based on the presence of affordable upgrades
+    const topUpgrades = availableUpgrades.slice(0, 8);
     const buySeenButton = document.getElementById('buySeenButton');
     const buyMaxButton = document.getElementById('buyMaxButton');
+
+    for (const upgrade of topUpgrades) {
+        const encodedName = encodeName(upgrade.name);
+        const button = document.querySelector(`button[data-upgrade-name="${encodedName}"]`);
+        if (!button) continue;
+
+        const affordable = isAffordable(upgrade.cost);
+        if (affordable) {
+            foundAffordableUpgrade = true;
+
+            // Reset all possible classes first
+            button.classList.remove('affordable', 'affordable-godmode', 'affordable-pu-godmode', 'affordable-double-godmode');
+
+            // Determine and add correct class
+            let classToAdd = 'affordable';
+            if (upgrade.isGodMode && upgrade.isPUGodMode) {
+                classToAdd = 'affordable-double-godmode';
+            } else if (upgrade.isPUGodMode) {
+                classToAdd = 'affordable-pu-godmode';
+            } else if (upgrade.isGodMode) {
+                classToAdd = 'affordable-godmode';
+            }
+            button.classList.add(classToAdd);
+        } else {
+            button.classList.remove('affordable', 'affordable-godmode', 'affordable-pu-godmode', 'affordable-double-godmode');
+        }
+
+        // Update the cost display
+        const costElement = button.nextElementSibling;
+        if (costElement) {
+            costElement.innerHTML = formatCost(upgrade.cost);
+        }
+
+        // Add icons if missing
+        if ((upgrade.isFight || upgrade.name === 'The Rock') && !button.querySelector('.sword-icon')) {
+            addIconToButton(button, 'sword-icon', './imgs/textures/sword_icon.png');
+        }
+
+        if (upgrade.isMeditation && !button.querySelector('.meditation-icon')) {
+            addIconToButton(button, 'meditation-icon', './imgs/textures/meditation_icon.png');
+        }
+
+        // Add tooltip listener once
+        if (!button.hasTooltipListener) {
+            attachTooltipEvents(button, upgrade);
+            button.hasTooltipListener = true;
+        }
+    }
+
+    // Toggle buy button appearance once
     buySeenButton.classList.toggle('affordable', foundAffordableUpgrade);
     buyMaxButton.classList.toggle('affordable', foundAffordableUpgrade);
 }
+
+// Utility function to add an icon
+function addIconToButton(button, className, src) {
+    const icon = document.createElement('img');
+    icon.src = src;
+    icon.classList.add(className);
+    icon.style.width = '16px';
+    icon.style.marginRight = '5px';
+    button.prepend(icon);
+    button.style.paddingLeft = '10px'; // Only once per icon addition
+}
+
 
 
 
@@ -4826,25 +4907,44 @@ class CountdownTimer {
 
 let currentPopupTooltipTimeoutId = null;
 
-function showPopupTooltip(message, color = 'gray', durationSeconds = 2) {
+function showPopupTooltip(message, color = 'gray', durationSeconds = 2, imageSrc = null) {
     const tooltip = document.getElementById('popup-tooltip');
-    tooltip.textContent = message;
+    
+    // Clear any previous content
+    tooltip.innerHTML = '';
+
+    // If an image URL is provided, create an image element and add it first.
+    if (imageSrc) {
+        const img = document.createElement('img');
+        img.src = imageSrc;
+        img.alt = 'Achievement icon';
+        img.classList.add('tooltip-achievement-icon'); // Add CSS for sizing/spacing as needed
+        tooltip.appendChild(img);
+    }
+    
+    // Create a span for the text message and append it
+    const textSpan = document.createElement('span');
+    textSpan.textContent = message;
+    tooltip.appendChild(textSpan);
+    
+    // Set the background color and display the tooltip
     tooltip.style.backgroundColor = color;
     tooltip.classList.add('visible-popup-tooltip');
     tooltip.classList.remove('hidden-popup-tooltip');
-
+    
     // Clear any existing timeout to avoid closing the current tooltip prematurely
     if (currentPopupTooltipTimeoutId) {
         clearTimeout(currentPopupTooltipTimeoutId);
     }
-
-    // Set a new timeout and store its ID
+    
+    // Hide the tooltip after the specified duration
     currentPopupTooltipTimeoutId = setTimeout(() => {
         tooltip.classList.remove('visible-popup-tooltip');
         tooltip.classList.add('hidden-popup-tooltip');
-        currentPopupTooltipTimeoutId = null; // Clear the timeout ID after it completes
+        currentPopupTooltipTimeoutId = null;
     }, durationSeconds * 1000);
 }
+
 
 
 const resourceToolTips = new Map();

@@ -28,6 +28,13 @@ const achievements = [
         type: 'freebie',
     },
     {
+        name: 'Watch Trailer',
+        isUnlocked: false,
+        hoverText: 'watch the game trailer',
+        img: 'imgs/achievements/watch_trailer.jpg',
+        type: 'freebie',
+    },
+    {
         name: 'Grasshopper',
         isUnlocked: false,
         hoverText: 'buy some upgrades',
@@ -81,6 +88,13 @@ const achievements = [
         isUnlocked: false,
         hoverText: 'trade any resources',
         img: 'imgs/achievements/trade_resources.jpg',
+        type: 'freebie',
+    },
+    {
+        name: 'Fifth',
+        isUnlocked: false,
+        hoverText: 'open achievements window 5 times in one session',
+        img: 'imgs/achievements/number_5.jpg',
         type: 'freebie',
     },
     {
@@ -168,13 +182,6 @@ const achievements = [
         type: 'progression',
     },
     {
-        name: 'Fifth',
-        isUnlocked: false,
-        hoverText: 'keep clicking achievements button',
-        img: 'imgs/achievements/number_5.jpg',
-        type: 'puzzle',
-    },
-    {
         name: 'Admire The Acronym',
         isUnlocked: false,
         hoverText: 'understand the meaning of this game',
@@ -182,11 +189,11 @@ const achievements = [
         type: 'puzzle',
     },
     {
-        name: '42 Misclicks',
+        name: 'Obsessive Compulsive',
         isUnlocked: false,
         hoverText: '???',
-        img: 'imgs/achievements/misfire.jpg',
-        type: 'skill',
+        img: 'imgs/achievements/number_100.jpg',
+        type: 'puzzle',
     },
     {
         name: `Can't Fix Crazy`,
@@ -252,6 +259,13 @@ const achievements = [
         type: 'puzzle',
     },
     {
+        name: 'Degens Adventure',
+        isUnlocked: false,
+        hoverText: "try the dev's other game",
+        img: 'imgs/achievements/degens_adventure.jpg',
+        type: 'freebie',
+    },
+    {
         name: 'Degens Idle Purist',
         isUnlocked: false,
         hoverText: 'one game at a time',
@@ -306,6 +320,13 @@ const achievements = [
         hoverText: '???',
         img: 'imgs/achievements/invalid_data.jpg',
         type: 'puzzle',
+    },
+    {
+        name: '42 Misclicks',
+        isUnlocked: false,
+        hoverText: '???',
+        img: 'imgs/achievements/misfire.jpg',
+        type: 'skill',
     },
     {
         name: 'Transcend',
@@ -469,6 +490,13 @@ const achievements = [
         type: 'puzzle',
     },
     {
+        name: 'Child Labor',
+        isUnlocked: false,
+        hoverText: '1 million clicks on cookie',
+        img: 'imgs/achievements/child_labor.jpg',
+        type: 'puzzle',
+    },
+    {
         name: 'Avoid the Crit',
         isUnlocked: false,
         hoverText: 'defeat Sauron',
@@ -553,6 +581,13 @@ const achievements = [
         type: 'puzzle',
     },
     {
+        name: 'Battle Analyst',
+        isUnlocked: false,
+        hoverText: '???',
+        img: 'imgs/achievements/battle_analyst.jpg',
+        type: 'puzzle',
+    },
+    {
         name: 'Chuck Norris Kidney',
         isUnlocked: false,
         hoverText: 'find a way to distract Chuck Norris',
@@ -630,9 +665,16 @@ const achievements = [
         type: 'puzzle',
     },
     {
+        name: 'Daytrader',
+        isUnlocked: false,
+        hoverText: 'make 1000 resource trades',
+        img: 'imgs/achievements/daytrader.jpg',
+        type: 'freebie'
+    },
+    {
         name: 'That is some Bad Luck',
         isUnlocked: false,
-        hoverText: 'keep playing Luck Game until it happens',
+        hoverText: 'lose 55% in luck game',
         img: 'imgs/achievements/very_unlucky.jpg',
         type: 'skill',
     },
@@ -913,7 +955,7 @@ const achievements = [
     {
         name: 'More than Sauron',
         isUnlocked: false,
-        hoverText: '???',
+        hoverText: 'this can be achieved in Saitama fight',
         img: 'imgs/achievements/damage_absorption.jpg',
         type: 'puzzle',
     },
@@ -1062,6 +1104,13 @@ const achievements = [
         type: 'puzzle',
     },
     {
+        name: 'Too Easy',
+        isUnlocked: false,
+        hoverText: 'get super lucky Skepticism rolls',
+        img: 'imgs/achievements/too_easy.jpg',
+        type: 'puzzle',
+    },
+    {
         name: 'Study Skepticism',
         isUnlocked: false,
         hoverText: `complete the Skepticism meditation`,
@@ -1130,6 +1179,13 @@ const achievements = [
         isUnlocked: false,
         hoverText: 'T before A without BC (cannot have infinite collapse)',
         img: 'imgs/achievements/absolute_leap.jpg',
+        type: 'puzzle',
+    },
+    {
+        name: `Ain't Nobody Got Time for That`,
+        isUnlocked: false,
+        hoverText: 'attempt Epicureanism at max duration',
+        img: 'imgs/achievements/aint_nobody_got_time_for_that.jpg',
         type: 'puzzle',
     },
     {
@@ -1275,6 +1331,13 @@ const achievements = [
         type: 'puzzle',
     },
     {
+        name: 'Gotthard Base Tunnel',
+        isUnlocked: false,
+        hoverText: `TT.AA km`,
+        img: 'imgs/achievements/gotthard_base_tunnel.jpg',
+        type: 'puzzle',
+    },
+    {
         name: 'Do as dev #3 says',
         isUnlocked: false,
         hoverText: `???`,
@@ -1310,6 +1373,195 @@ const achievements = [
         type: 'puzzle',
     },
     {
+        name: 'A',
+        isUnlocked: false,
+        hoverText: `acquire the arcane letter A`,
+        img: 'imgs/achievements/letter_a.jpg',
+        type: 'progression',
+    },
+    {
+        name: 'B',
+        isUnlocked: false,
+        hoverText: `bag the blazing letter B`,
+        img: 'imgs/achievements/letter_b.jpg',
+        type: 'progression',
+    },
+    {
+        name: 'C',
+        isUnlocked: false,
+        hoverText: `capture the cosmic letter C`,
+        img: 'imgs/achievements/letter_c.jpg',
+        type: 'progression',
+    },
+    {
+        name: 'D',
+        isUnlocked: false,
+        hoverText: `deliver the daring letter D`,
+        img: 'imgs/achievements/letter_d.jpg',
+        type: 'progression',
+    },
+    {
+        name: 'E',
+        isUnlocked: false,
+        hoverText: `embrace the enigmatic letter E`,
+        img: 'imgs/achievements/letter_e.jpg',
+        type: 'progression',
+    },
+    {
+        name: 'Spell It Out',
+        isUnlocked: false,
+        hoverText: `in available upgrades`,
+        img: 'imgs/achievements/ace.jpg',
+        type: 'puzzle',
+    },
+    {
+        name: 'F',
+        isUnlocked: false,
+        hoverText: `fetch the fiery letter F`,
+        img: 'imgs/achievements/letter_f.jpg',
+        type: 'progression',
+    },
+    {
+        name: 'G',
+        isUnlocked: false,
+        hoverText: `grab the glowing letter G`,
+        img: 'imgs/achievements/letter_g.jpg',
+        type: 'progression',
+    },
+    {
+        name: 'H',
+        isUnlocked: false,
+        hoverText: `hunt the hidden letter H`,
+        img: 'imgs/achievements/letter_h.jpg',
+        type: 'progression',
+    },
+    {
+        name: 'I',
+        isUnlocked: false,
+        hoverText: `identify the illustrious letter I`,
+        img: 'imgs/achievements/letter_i.jpg',
+        type: 'progression',
+    },
+    {
+        name: 'J',
+        isUnlocked: false,
+        hoverText: `join the jubilant letter J`,
+        img: 'imgs/achievements/letter_j.jpg',
+        type: 'progression',
+    },
+    {
+        name: 'K',
+        isUnlocked: false,
+        hoverText: `kindle the keen letter K`,
+        img: 'imgs/achievements/letter_k.jpg',
+        type: 'progression',
+    },
+    {
+        name: 'L',
+        isUnlocked: false,
+        hoverText: `lock the luminous letter L`,
+        img: 'imgs/achievements/letter_l.jpg',
+        type: 'progression',
+    },
+    {
+        name: 'M',
+        isUnlocked: false,
+        hoverText: `master the mighty letter M`,
+        img: 'imgs/achievements/letter_m.jpg',
+        type: 'progression',
+    },
+    {
+        name: 'N',
+        isUnlocked: false,
+        hoverText: `nab the noble letter N`,
+        img: 'imgs/achievements/letter_n.jpg',
+        type: 'progression',
+    },
+    {
+        name: 'O',
+        isUnlocked: false,
+        hoverText: `obtain the ornate letter O`,
+        img: 'imgs/achievements/letter_o.jpg',
+        type: 'progression',
+    },
+    {
+        name: 'P',
+        isUnlocked: false,
+        hoverText: `procure the powerful letter P`,
+        img: 'imgs/achievements/letter_p.jpg',
+        type: 'progression',
+    },
+    {
+        name: 'Q',
+        isUnlocked: false,
+        hoverText: `quest for the quintessential letter Q`,
+        img: 'imgs/achievements/letter_q.jpg',
+        type: 'progression',
+    },
+    {
+        name: 'R',
+        isUnlocked: false,
+        hoverText: `retrieve the radiant letter R`,
+        img: 'imgs/achievements/letter_r.jpg',
+        type: 'progression',
+    },
+    {
+        name: 'S',
+        isUnlocked: false,
+        hoverText: `secure the stellar letter S`,
+        img: 'imgs/achievements/letter_s.jpg',
+        type: 'progression',
+    },
+    {
+        name: 'T',
+        isUnlocked: false,
+        hoverText: `track the tenacious letter T`,
+        img: 'imgs/achievements/letter_t.jpg',
+        type: 'progression',
+    },
+    {
+        name: 'U',
+        isUnlocked: false,
+        hoverText: `uncover the unique letter U`,
+        img: 'imgs/achievements/letter_u.jpg',
+        type: 'progression',
+    },
+    {
+        name: 'V',
+        isUnlocked: false,
+        hoverText: `vie for the vibrant letter V`,
+        img: 'imgs/achievements/letter_v.jpg',
+        type: 'progression',
+    },
+    {
+        name: 'W',
+        isUnlocked: false,
+        hoverText: `win the wondrous letter W`,
+        img: 'imgs/achievements/letter_w.jpg',
+        type: 'progression',
+    },
+    {
+        name: 'X',
+        isUnlocked: false,
+        hoverText: `xerox the xenial letter X`,
+        img: 'imgs/achievements/letter_x.jpg',
+        type: 'progression',
+    },
+    {
+        name: 'Y',
+        isUnlocked: false,
+        hoverText: `yearn for the youthful letter Y`,
+        img: 'imgs/achievements/letter_y.jpg',
+        type: 'progression',
+    },
+    {
+        name: 'Z',
+        isUnlocked: false,
+        hoverText: `zip to the zealous letter Z`,
+        img: 'imgs/achievements/letter_z.jpg',
+        type: 'progression',
+    },
+    {
         name: 'Prove the Muppet Wrong',
         isUnlocked: false,
         hoverText: `???`,
@@ -1337,6 +1589,13 @@ const achievements = [
         img: 'imgs/achievements/50_days_of_saving.jpg',
         type: 'freebie',
         respecPoint: true,
+    },
+    {
+        name: 'Skip Master 5000',
+        isUnlocked: false,
+        hoverText: `skip 5000 mini games`,
+        img: 'imgs/achievements/skip_master_5000.jpg',
+        type: 'freebie',
     },
     {
         name: 'Ego Death',
@@ -1448,6 +1707,9 @@ function showAchievementsOverlay() {
     if (numAchievementsOpens==5){
         unlockAchievement('Fifth');
     }
+    if (numAchievementsOpens==100){
+        unlockAchievement('Obsessive Compulsive');
+    }
     assAssSequence += 'A';
     checkAssAssSequence();
     // Reset to default tab and render achievements
@@ -1494,7 +1756,7 @@ function unlockAchievement(name, duringLoad = false) {
             saveGameState();
             updateMultipliersDisplay();
             updateEffectiveMultipliers();
-            showPopupTooltip(`Unlocked Achievement: ${name}`, color='#1B4D3E', durationSeconds=6);
+            showPopupTooltip(`Achievement: ${name}`, color='#1B4D3E', durationSeconds=6, imageSrc=achievement.img);
         }
     }
 }
