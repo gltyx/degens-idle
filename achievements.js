@@ -259,10 +259,10 @@ const achievements = [
         type: 'puzzle',
     },
     {
-        name: 'Degens Adventure',
+        name: 'Prismatic Adventure',
         isUnlocked: false,
         hoverText: "try the dev's other game",
-        img: 'imgs/achievements/degens_adventure.jpg',
+        img: 'imgs/achievements/prismatic_adventure.jpg',
         type: 'freebie',
     },
     {

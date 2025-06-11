@@ -367,9 +367,9 @@ document.getElementById('feedbackButton').addEventListener('click', function() {
 });
 
 // Add event listener for Discord button
-document.getElementById('degensAdventureButton').addEventListener('click', function() {
-    unlockAchievement('Degens Adventure');
-    window.open('https://www.degensidle.com/adventure/', '_blank');
+document.getElementById('prismaticAdventureButton').addEventListener('click', function() {
+    unlockAchievement('Prismatic Adventure');
+    window.open('https://www.kuzzigames.com/prismatic_adventure/', '_blank');
 });
 
 function toggleAllBuyMarkers(targetState) {
